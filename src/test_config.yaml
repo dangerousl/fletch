@@ -1,0 +1,6 @@
+port: 8888
+filters:
+  - path: "/tests/v1"
+    action: "allow"
+  - path: "/admin"
+    action: "deny"
