@@ -1,6 +1,16 @@
-port: 8888
-filters:
-  - path: "/tests/v1"
-    action: "allow"
-  - path: "/admin"
-    action: "deny"
+proxy_port: 8888
+routes:
+  "/tests/v1":
+    host: localhost
+    port: 8080
+    filters:
+      - type: "HeaderAdder"
+        header_key: "served-by"
+        header_value: "fletch-proxy"
+  "/admins/v1":
+    host: localhost
+    port: 8081
+    filters:
+      - type: "HeaderAdder"
+        header_key: "X-Admin-Header"
+        header_value: "true"
