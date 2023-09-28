@@ -45,11 +45,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     loop {
         let (stream, _) = listener.accept().await?;
         let io = TokioIo::new(stream);
-    
-        let config_clone = config.clone(); // clone the Arc to move into the tokio task
+
+        // clone the Arc to move into the tokio task
+        let config_clone = config.clone();
+        
         // Spawn a tokio task to serve multiple connections concurrently
         tokio::task::spawn(async move {
-            let hs = HandlerService { config: config_clone }; // Create a new HandlerService here
+            // Create a new HandlerService here, not sure if this is ideal for each request yet
+            let hs = HandlerService { config: config_clone };
             if let Err(err) = http1::Builder::new()
                 .serve_connection(io, service_fn(|req| hs.call(req)))
                 .await
@@ -62,7 +65,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
 #[derive(Clone)]
 struct HandlerService {
-    config: Arc<ProxyConfig>,  // Use Arc to make proxyConfig shareable among tasks
+    // Use Arc to make proxyConfig shareable among tasks
+    config: Arc<ProxyConfig>,
 }
 
 impl HandlerService {
