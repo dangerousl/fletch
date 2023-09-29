@@ -13,3 +13,4 @@ hyper-util = { git = "https://github.com/hyperium/hyper-util.git" }
 lazy_static = "1.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_yaml = "0.8"
+http = "0.2.9"
